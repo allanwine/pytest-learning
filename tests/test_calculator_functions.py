@@ -1,4 +1,5 @@
 import pytest
+import time
 import src.calculator_functions as calculator_functions
 
 def test_add():
@@ -47,3 +48,24 @@ def test_new_divide():
 def test_new_divide_string():
     with pytest.raises(TypeError):
         calculator_functions.new_divide(1, "2")
+
+# run pytest -m slow to run slow tests
+@pytest.mark.slow
+def test_slow_divide():
+    start = time.time()
+    time.sleep(1)
+    assert calculator_functions.divide(1, 2) == 0.5
+    end = time.time()
+    assert end - start >= 0.5
+
+def test_skip_add():
+    pytest.skip("Skipping the test")
+    assert calculator_functions.add(1, 2) == 4
+
+@pytest.mark.skip(reason="This will always fail")
+def test_skip_subtract():
+    assert calculator_functions.subtract(1, 2) == -1
+
+@pytest.mark.xfail(reason="This will always fail")
+def test_xfail_multiply():
+    assert calculator_functions.multiply(1, 2) == 3
